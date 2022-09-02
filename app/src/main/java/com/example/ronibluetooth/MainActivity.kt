@@ -13,22 +13,31 @@ import androidx.core.app.ActivityCompat
 import com.example.ronibluetooth.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 import android.app.Activity
+import android.app.Dialog
+import android.bluetooth.BluetoothDevice
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 
 import androidx.activity.result.contract.ActivityResultContracts
-
-
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.ronibluetooth.databinding.DeviceFoundBinding
+import com.example.ronibluetooth.models.Device
+import com.example.ronibluetooth.utils.DeviceAdapter
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var bindingListBl: DeviceFoundBinding
+    private lateinit var dialogBox: Dialog
+    private lateinit var recyclerviewDevice: RecyclerView
     //lateinit var activityResultLauncher:ActivityResultLauncher<Intent>
     lateinit var  registerForResult:ActivityResultLauncher<Intent>
-
-
+    var deviceList = ArrayList<Device>()
+    private var deviceAdapter: DeviceAdapter = DeviceAdapter(this,this)
 
     lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
@@ -58,8 +67,57 @@ class MainActivity : AppCompatActivity() {
 //                cekScanBTPermission()
                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+                println("device is on")
+                displayDevice()
+            }
+
+            if (bluetoothAdapter?.isEnabled == true) {
+                //cekForBTConPermision()
+//                checkBTPermissions()
+//                cekScanBTPermission()
+                println("device is on, start to display bonded device")
+                displayDevice()
             }
         }
+    }
+
+    private fun displayDevice() {
+        deviceList.clear()
+        bindingListBl = DeviceFoundBinding.inflate(layoutInflater)
+        this.dialogBox = Dialog(this)
+        this.dialogBox.setContentView(bindingListBl.root)
+        this.dialogBox.setCanceledOnTouchOutside(true)
+        getBondedDevice()
+        recyclerviewDevice = bindingListBl.recyclerView
+        recyclerviewDevice.layoutManager = LinearLayoutManager(this)
+        recyclerviewDevice.setHasFixedSize(true)
+        recyclerviewDevice.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                LinearLayoutManager.VERTICAL
+            )
+        )
+        this.recyclerviewDevice.adapter = deviceAdapter
+        this.deviceAdapter.setData(deviceList)
+        this.dialogBox.show()
+
+
+    }
+
+    private fun getBondedDevice() {
+        val bluetoothManager: BluetoothManager = getSystemService(BluetoothManager::class.java)
+        val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
+        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
+        pairedDevices?.forEach { device ->
+            val deviceName = device.name
+            val deviceHardwareAddress = device.address // MAC address
+            println("nama $deviceName")
+            println("Mac $deviceHardwareAddress")
+            deviceList.add(
+                Device(deviceName,deviceHardwareAddress)
+                )
+        }
+        println(deviceList)
     }
 
     private fun cekScanBTPermission() {
