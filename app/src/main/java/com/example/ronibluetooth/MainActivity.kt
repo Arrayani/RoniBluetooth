@@ -16,7 +16,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
-import android.os.AsyncTask
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -34,6 +33,7 @@ import com.example.ronibluetooth.models.Device
 import com.example.ronibluetooth.utils.DeviceAdapter
 import kotlinx.coroutines.*
 import java.io.IOException
+import java.io.OutputStream
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -48,13 +48,13 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
     lateinit var mBluetoothSocket: BluetoothSocket
 
     //lateinit var activityResultLauncher:ActivityResultLauncher<Intent>
-    lateinit var  registerForResult:ActivityResultLauncher<Intent>
+    lateinit var registerForResult: ActivityResultLauncher<Intent>
     var deviceList = ArrayList<Device>()
-    private var deviceAdapter: DeviceAdapter = DeviceAdapter(this,this)
+    private var deviceAdapter: DeviceAdapter = DeviceAdapter(this, this)
 
     lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
-    override fun onCreate(savedInstanceState: Bundle?){
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -65,14 +65,15 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
 
     private fun initView() {
         val findbtn = binding.findBtn
-        findbtn.setOnClickListener{
+        findbtn.setOnClickListener {
             val bluetoothManager: BluetoothManager = getSystemService(BluetoothManager::class.java)
             val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
             val root = binding.mainRoot
             if (bluetoothAdapter == null) {
-                Snackbar.make(root,"Perangkat tidak mendukung bluetooth", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(root, "Perangkat tidak mendukung bluetooth", Snackbar.LENGTH_LONG)
+                    .show()
                 binding.findBtn.text = "No Bluetooth"
-                binding.findBtn.isEnabled=false
+                binding.findBtn.isEnabled = false
             }
             if (bluetoothAdapter?.isEnabled == false) {
                 cekForBTConPermision()
@@ -86,19 +87,48 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
 
             if (bluetoothAdapter?.isEnabled == true) {
                 //cekForBTConPermision()
-//                checkBTPermissions()
-//                cekScanBTPermission()
+                checkBTPermissions()
+                cekScanBTPermission()
                 println("device is on, start to display bonded device")
                 displayDevice()
             }
-            if(binding.findBtn.text=="Clear Device"){
+
+//            if(binding.findBtn.text=="None"){
+//                checkBTPermissions()
+//                cekScanBTPermission()
+//                println("device is on, start to display bonded device")
+//                displayDevice()
+//            }
+            if (binding.findBtn.text == "Clear Device") {
                 mBluetoothSocket.close()
                 binding.conStatsTv.text = "None"
-                binding.findBtn.text="Find Device"
+                binding.findBtn.text = "Find Device"
+                cekConected()
                 return@setOnClickListener
             }
         }
+        cekConected()
+
     }
+
+    private fun cekConected() {
+        val print1 = binding.print1Btn
+        val print2 = binding.print2Btn
+        val stats = binding.conStatsTv.text
+        if (stats == "None") {
+            print1.isEnabled = false
+            print2.isEnabled = false
+        }
+        if (stats != "None") {
+            print1.isEnabled = true
+            print2.isEnabled = true
+        }
+        print1.setOnClickListener{
+            p1()
+        }
+    }
+
+
 
     private fun displayDevice() {
         deviceList.clear()
@@ -124,6 +154,7 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
     }
 
     private fun getBondedDevice() {
+        cekForBTConPermision()
         val bluetoothManager: BluetoothManager = getSystemService(BluetoothManager::class.java)
         val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
         val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
@@ -133,8 +164,8 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
             println("nama $deviceName")
             println("Mac $deviceHardwareAddress")
             deviceList.add(
-                Device(deviceName,deviceHardwareAddress)
-                )
+                Device(deviceName, deviceHardwareAddress)
+            )
         }
         println(deviceList)
 
@@ -143,28 +174,34 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
     private fun cekScanBTPermission() {
         val mLayout = binding.mainRoot
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN)
-            == PackageManager.PERMISSION_GRANTED){
+            == PackageManager.PERMISSION_GRANTED
+        ) {
             //Toast.makeText(this@MainActivity,"Sudah diberikan izin akses Scan Bluetooth", Toast.LENGTH_SHORT).show()
             //Snackbar.make(mLayout,"Sudah diberikan izin akses Scan Bluetooth", Snackbar.LENGTH_LONG).show()
-        }
-        else{
-            Snackbar.make(mLayout,"Belum diberikan izin akses Scan Bluetooth", Snackbar.LENGTH_LONG).show()
+        } else {
+            Snackbar.make(
+                mLayout,
+                "Belum diberikan izin akses Scan Bluetooth",
+                Snackbar.LENGTH_LONG
+            ).show()
             requestScanBTPermission()
         }
     }
+
     private fun requestScanBTPermission() {
-        if(ActivityCompat.shouldShowRequestPermissionRationale(
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
                 Manifest.permission.BLUETOOTH_SCAN
 
-            )){
+            )
+        ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 ActivityCompat.requestPermissions(
                     this@MainActivity, arrayOf((Manifest.permission.BLUETOOTH_SCAN)),
                     PERMISSION_REQUEST_BLUETOOTH_SCAN
                 )
             }
-        }else{
+        } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 ActivityCompat.requestPermissions(
                     this@MainActivity, arrayOf((Manifest.permission.BLUETOOTH_SCAN)),
@@ -178,12 +215,17 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
 
     private fun checkBTPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            var permissionCheck: Int = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION")
+            var permissionCheck: Int =
+                this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION")
             permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION")
             if (permissionCheck != 0) {
                 this.requestPermissions(
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION),
-                    1001) //Any number
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ),
+                    1001
+                ) //Any number
             } // minta 2 permission sekaligus
         } else {
             Log.d(TAG, "checkBTPermissions: No need to check permissions. SDK version < LOLLIPOP.")
@@ -193,27 +235,30 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
     private fun cekForBTConPermision() {
         val root = binding.mainRoot
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
-            == PackageManager.PERMISSION_GRANTED){
-            Snackbar.make(root,"Sudah diberikan izin Bluetooth Connect", Snackbar.LENGTH_LONG).show()
-        }
-        else{
-            Snackbar.make(root,"Belum diberikan izin akses", Snackbar.LENGTH_LONG).show()
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            Snackbar.make(root, "Sudah diberikan izin Bluetooth Connect", Snackbar.LENGTH_LONG)
+                .show()
+        } else {
+            Snackbar.make(root, "Belum diberikan izin akses", Snackbar.LENGTH_LONG).show()
             requestBluetoothConnetctPermission()
         }
     }
+
     private fun requestBluetoothConnetctPermission() {
-        if(ActivityCompat.shouldShowRequestPermissionRationale(
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
                 Manifest.permission.BLUETOOTH_CONNECT
 
-            )){
+            )
+        ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 ActivityCompat.requestPermissions(
                     this@MainActivity, arrayOf((Manifest.permission.BLUETOOTH_CONNECT)),
                     PERMISSION_REQUEST_BLUETOOTH_CONNECT
                 )
             }
-        }else{
+        } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 ActivityCompat.requestPermissions(
                     this@MainActivity, arrayOf((Manifest.permission.BLUETOOTH_CONNECT)),
@@ -223,10 +268,6 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
 
         }
     }
-
-
-
-
 
 
     companion object {
@@ -237,9 +278,30 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
         private const val REQUEST_ENABLE_BT = 2
     }
 
+    private fun p1() {
+        val mmOutStream: OutputStream = mBluetoothSocket.outputStream
+        val mmBuffer: ByteArray = ByteArray(1024) // mmBuffer store for the stream
+        val scope = CoroutineScope(Dispatchers.IO)
+        scope.launch {
+            try {
+                    val os =mBluetoothSocket.outputStream
+                    var header = "Rose Medical"
+                    val blank ="\n\n"
+
+                    os.write(header.toByteArray())
+                    os.write(blank.toByteArray())
+                }
+                catch (e: Exception) {
+                    Log.e("PrintActivity", "Exe ", e)
+                }
+        }
+
+    }
+
+
     override fun ClickedItem(deviceList: Device) {
         println("ini yang di pilih ${deviceList.deviceMac}")
-        val mLayout=binding.mainRoot
+        val mLayout = binding.mainRoot
         cekScanBTPermission()
         checkBTPermissions()
         val scope = CoroutineScope(Dispatchers.IO)
@@ -267,19 +329,22 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
                         val addressDevice = deviceList.deviceMac
                         binding.conStatsTv.text = "$namaDevice-$addressDevice"
                         binding.findBtn.text = "Clear Device"
-                        Snackbar.make(mLayout,"Koneksi bluetooth berhasil", Snackbar.LENGTH_LONG).show()
-
+                        Snackbar.make(mLayout, "Koneksi bluetooth berhasil", Snackbar.LENGTH_LONG)
+                            .show()
+                        cekConected()
                     }
                     Log.d(TAG, "berhasil connect ke socket bluetoothdevice")
                 } catch (eConnectException: IOException) {
                     Log.d(TAG, "CouldNotConnectToSocket", eConnectException)
                     withContext(Dispatchers.Main) {
                         binding.progressBar.visibility = View.INVISIBLE
-                        Snackbar.make(mLayout,"Koneksi bluetooth gagal", Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(mLayout, "Koneksi bluetooth gagal", Snackbar.LENGTH_LONG)
+                            .show()
                     }
-                           closeSocket(mBluetoothSocket)
+                    closeSocket(mBluetoothSocket)
                 }
-            }}
+            }
+        }
     }
 
     private fun closeSocket(mBluetoothSocket: BluetoothSocket) {
