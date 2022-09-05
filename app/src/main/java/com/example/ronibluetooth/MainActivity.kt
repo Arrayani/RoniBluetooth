@@ -13,9 +13,11 @@ import androidx.core.app.ActivityCompat
 import com.example.ronibluetooth.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Dialog
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import android.content.DialogInterface
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -64,9 +66,10 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
     }
 
     private fun initView() {
+        checkBTPermissions()
         cekForBTConPermision()
         cekScanBTPermission()
-        checkBTPermissions()
+
 
         val findbtn = binding.findBtn
         findbtn.setOnClickListener {
@@ -81,8 +84,8 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
             }
             if (bluetoothAdapter?.isEnabled == false) {
                 cekForBTConPermision()
-//                checkBTPermissions()
-//                cekScanBTPermission()
+                checkBTPermissions()
+                cekScanBTPermission()
                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
                 println("device is on")
@@ -90,7 +93,7 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
             }
 
             if (bluetoothAdapter?.isEnabled == true) {
-                //cekForBTConPermision()
+                cekForBTConPermision()
                 checkBTPermissions()
                 cekScanBTPermission()
                 println("device is on, start to display bonded device")
@@ -159,7 +162,7 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
     }
 
     private fun getBondedDevice() {
-        cekForBTConPermision()
+        //cekForBTConPermision()
         val bluetoothManager: BluetoothManager = getSystemService(BluetoothManager::class.java)
         val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
         val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
@@ -201,53 +204,102 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
                 Manifest.permission.BLUETOOTH_SCAN
-
             )
         ) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                ActivityCompat.requestPermissions(
-                    this@MainActivity, arrayOf((Manifest.permission.BLUETOOTH_SCAN)),
-                    PERMISSION_REQUEST_BLUETOOTH_SCAN
-                )
-            }
+            val builder = AlertDialog.Builder(this)
+            //Builder(this)
+            builder.setTitle("Izin dibutuhkan")
+                .setMessage("Untuk dapat menggunakan printer, izin bluetooth dibutuhkan")
+                .setPositiveButton("ok",
+                    DialogInterface.OnClickListener { dialog, which ->
+                        ActivityCompat.requestPermissions(
+                            this,
+                            arrayOf(Manifest.permission.BLUETOOTH_SCAN),
+                            PERMISSION_REQUEST_BLUETOOTH_SCAN
+                        )
+                    })
+                .setNegativeButton("cancel",
+                    DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+                .create().show()
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 ActivityCompat.requestPermissions(
                     this@MainActivity, arrayOf((Manifest.permission.BLUETOOTH_SCAN)),
                     PERMISSION_REQUEST_BLUETOOTH_SCAN
                 )
-            }
 
         }
 
     }
 
-    private fun checkBTPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            var permissionCheck: Int =
-                this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION")
-            permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION")
-            if (permissionCheck != 0) {
-                this.requestPermissions(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ),
-                    1001
-                ) //Any number
-            } // minta 2 permission sekaligus
+//    private fun checkBTPermissions() {
+//        var permissionCheck: Int =
+//            this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION")
+//        permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION")
+//        if (permissionCheck != 0) {
+//            this.requestPermissions(
+//                arrayOf(
+//                    Manifest.permission.ACCESS_FINE_LOCATION,
+//                    Manifest.permission.ACCESS_COARSE_LOCATION
+//                ),
+//                1001
+//            ) //Any number
+//        } // minta 2 permission sekaligus
+//    }
+private fun checkBTPermissions() {
+    val mLayout = binding.mainRoot
+    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
+        == PackageManager.PERMISSION_GRANTED
+    ) {
+        //Toast.makeText(this@MainActivity,"Sudah diberikan izin akses Bluetooth", Toast.LENGTH_SHORT).show()
+        Snackbar.make(mLayout,"Sudah diberikan izin akses Bluetooth", Snackbar.LENGTH_LONG).show()
+    } else {
+        Snackbar.make(
+            mLayout,
+            "Belum diberikan izin akses Scan Bluetooth",
+            Snackbar.LENGTH_LONG
+        ).show()
+        requestBTPermission()
+    }
+}
+
+    private fun requestBTPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.BLUETOOTH
+            )
+        ) {
+            val builder = AlertDialog.Builder(this)
+            //Builder(this)
+            builder.setTitle("Izin dibutuhkan")
+                .setMessage("Untuk dapat menggunakan printer, izin bluetooth dibutuhkan")
+                .setPositiveButton("ok",
+                    DialogInterface.OnClickListener { dialog, which ->
+                        ActivityCompat.requestPermissions(
+                            this,
+                            arrayOf(Manifest.permission.BLUETOOTH),
+                            PERMISSION_REQUEST_BLUETOOTH
+                        )
+                    })
+                .setNegativeButton("cancel",
+                    DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+                .create().show()
         } else {
-            Log.d(TAG, "checkBTPermissions: No need to check permissions. SDK version < LOLLIPOP.")
+            ActivityCompat.requestPermissions(
+                this@MainActivity, arrayOf((Manifest.permission.BLUETOOTH)),
+                PERMISSION_REQUEST_BLUETOOTH
+            )
+
         }
     }
+
 
     private fun cekForBTConPermision() {
         val root = binding.mainRoot
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
             == PackageManager.PERMISSION_GRANTED
         ) {
-//            Snackbar.make(root, "Sudah diberikan izin Bluetooth Connect", Snackbar.LENGTH_LONG)
-//                .show()
+            Snackbar.make(root, "Sudah diberikan izin Bluetooth Connect", Snackbar.LENGTH_LONG)
+                .show()
         } else {
             Snackbar.make(root, "Belum diberikan izin akses", Snackbar.LENGTH_LONG).show()
             requestBluetoothConnetctPermission()
@@ -258,15 +310,23 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
                 Manifest.permission.BLUETOOTH_CONNECT
-
             )
         ) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                ActivityCompat.requestPermissions(
-                    this@MainActivity, arrayOf((Manifest.permission.BLUETOOTH_CONNECT)),
-                    PERMISSION_REQUEST_BLUETOOTH_CONNECT
-                )
-            }
+            val builder = AlertDialog.Builder(this)
+            //Builder(this)
+            builder.setTitle("Izin dibutuhkan")
+                .setMessage("Untuk dapat menggunakan printer, izin bluetooth dibutuhkan")
+                .setPositiveButton("ok",
+                    DialogInterface.OnClickListener { dialog, which ->
+                        ActivityCompat.requestPermissions(
+                            this,
+                            arrayOf(Manifest.permission.BLUETOOTH_CONNECT),
+                            PERMISSION_REQUEST_BLUETOOTH_CONNECT
+                        )
+                    })
+                .setNegativeButton("cancel",
+                    DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+                .create().show()
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 ActivityCompat.requestPermissions(
@@ -283,7 +343,7 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
         private const val TAG = "MainActivity"
         private const val PERMISSION_REQUEST_BLUETOOTH_CONNECT = 20
         private const val PERMISSION_REQUEST_BLUETOOTH_SCAN = 30
-        private const val REQUEST_CONNECT_DEVICE = 1
+        private const val PERMISSION_REQUEST_BLUETOOTH = 10
         private const val REQUEST_ENABLE_BT = 2
     }
 
