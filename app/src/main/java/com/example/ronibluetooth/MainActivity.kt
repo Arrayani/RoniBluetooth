@@ -222,16 +222,16 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
                     DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
                 .create().show()
         } else {
-                ActivityCompat.requestPermissions(
-                    this@MainActivity, arrayOf((Manifest.permission.BLUETOOTH_SCAN)),
-                    PERMISSION_REQUEST_BLUETOOTH_SCAN
-                )
+            ActivityCompat.requestPermissions(
+                this@MainActivity, arrayOf((Manifest.permission.BLUETOOTH_SCAN)),
+                PERMISSION_REQUEST_BLUETOOTH_SCAN
+            )
 
         }
 
     }
 
-//    private fun checkBTPermissions() {
+    //    private fun checkBTPermissions() {
 //        var permissionCheck: Int =
 //            this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION")
 //        permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION")
@@ -245,22 +245,22 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
 //            ) //Any number
 //        } // minta 2 permission sekaligus
 //    }
-private fun checkBTPermissions() {
-    val mLayout = binding.mainRoot
-    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
-        == PackageManager.PERMISSION_GRANTED
-    ) {
-        //Toast.makeText(this@MainActivity,"Sudah diberikan izin akses Bluetooth", Toast.LENGTH_SHORT).show()
-        Snackbar.make(mLayout,"Sudah diberikan izin akses Bluetooth", Snackbar.LENGTH_LONG).show()
-    } else {
-        Snackbar.make(
-            mLayout,
-            "Belum diberikan izin akses Scan Bluetooth",
-            Snackbar.LENGTH_LONG
-        ).show()
-        requestBTPermission()
+    private fun checkBTPermissions() {
+        val mLayout = binding.mainRoot
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            //Toast.makeText(this@MainActivity,"Sudah diberikan izin akses Bluetooth", Toast.LENGTH_SHORT).show()
+            Snackbar.make(mLayout,"Sudah diberikan izin akses Bluetooth", Snackbar.LENGTH_LONG).show()
+        } else {
+            Snackbar.make(
+                mLayout,
+                "Belum diberikan izin akses Scan Bluetooth",
+                Snackbar.LENGTH_LONG
+            ).show()
+            requestBTPermission()
+        }
     }
-}
 
     private fun requestBTPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
@@ -397,46 +397,46 @@ private fun checkBTPermissions() {
         val scope2 = CoroutineScope(Dispatchers.IO)
         scope.launch {
             try{
-            writeWithFormat(namaToko.toByteArray(),Formatter().get(),Formatter.centerAlign())
-            writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.leftAlign())
-            writeWithFormat(alamatToko.toByteArray(),Formatter().get(),Formatter.centerAlign())
-            writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.leftAlign())
-            writeWithFormat(hp.toByteArray(),Formatter().get(),Formatter.centerAlign())
-            writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                writeWithFormat(namaToko.toByteArray(),Formatter().get(),Formatter.centerAlign())
+                writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.centerAlign())
+                writeWithFormat(alamatToko.toByteArray(),Formatter().get(),Formatter.centerAlign())
+                writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.centerAlign())
+                writeWithFormat(hp.toByteArray(),Formatter().get(),Formatter.centerAlign())
+                writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.centerAlign())
             }catch (e: Exception) {
                 Log.e("PrintActivity", "Exe ", e)
             }
 
             for (i in 1..2){
-            try {
-                writeWithFormat(merk.toByteArray(),Formatter().get(),Formatter.leftAlign())
-                writeWithFormat(strip.toByteArray(),Formatter().get(),Formatter.leftAlign())
-                writeWithFormat(namaBrg.toByteArray(),Formatter().get(),Formatter.leftAlign())
-                writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.leftAlign())
-                writeWithFormat(varian.toByteArray(),Formatter().get(),Formatter.leftAlign())
-                writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.leftAlign())
-                writeWithFormat(rp.toByteArray(),Formatter().get(),Formatter.leftAlign())
-                writeWithFormat(harga.toByteArray(),Formatter().get(),Formatter.leftAlign())
-                writeWithFormat(ex.toByteArray(),Formatter().get(),Formatter.leftAlign())
-                writeWithFormat(jumlah.toByteArray(),Formatter().get(),Formatter.leftAlign())
-                writeWithFormat(satuan.toByteArray(),Formatter().get(),Formatter.leftAlign())
-                writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.leftAlign())
-                writeWithFormat(textTotal.toByteArray(),Formatter().get(),Formatter.rightAlign())
-                writeWithFormat(total.toByteArray(),Formatter().get(),Formatter.rightAlign())
-                writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.leftAlign())
-               // writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                try {
+                    writeWithFormat(merk.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                    writeWithFormat(strip.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                    writeWithFormat(namaBrg.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                    writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                    writeWithFormat(varian.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                    writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                    writeWithFormat(rp.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                    writeWithFormat(harga.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                    writeWithFormat(ex.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                    writeWithFormat(jumlah.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                    writeWithFormat(satuan.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                    writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                    writeWithFormat(textTotal.toByteArray(),Formatter().get(),Formatter.rightAlign())
+                    writeWithFormat(total.toByteArray(),Formatter().get(),Formatter.rightAlign())
+                    writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.leftAlign())
+                    // writeWithFormat(enter.toByteArray(),Formatter().get(),Formatter.leftAlign())
 //                val message = "Example message\n"
-                // Default format:
+                    // Default format:
 //                writeWithFormat(message.toByteArray(), Formatter().get(), Formatter.leftAlign())
-                // Bold format center:
+                    // Bold format center:
 //                writeWithFormat(message.toByteArray(),
 //                    Formatter().bold().get(),
 //                    Formatter.centerAlign())
-                // Bold underlined format with right alignment:
+                    // Bold underlined format with right alignment:
 //                writeWithFormat(message.toByteArray(),
 //                    Formatter().bold().underlined().get(),
 //                    Formatter.rightAlign())
-            }catch (e: Exception) {
+                }catch (e: Exception) {
                     Log.e("PrintActivity", "Exe ", e)
                 }}
         }
