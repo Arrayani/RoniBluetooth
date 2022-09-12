@@ -62,7 +62,12 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
         setContentView(binding.root)
         initView()
 
-
+        val secondActBtn = binding.secondActBtn
+        secondActBtn.setOnClickListener{
+            intent = Intent(this,SecondActivity::class.java)
+            startActivity(intent)
+            println("button push")
+        }
     }
 
     private fun initView() {
@@ -114,6 +119,8 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
                 return@setOnClickListener
             }
         }
+
+
         cekConected()
 
     }
