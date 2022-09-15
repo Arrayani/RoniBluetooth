@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_home"
+        android:title="Home" />
+    <item
+        android:id="@+id/inputItem"
+        android:icon="@drawable/ic_item"
+        android:title="Input Item" />
+    <item
+        android:id="@+id/transaksi"
+        android:title="Transaksi"
+        android:icon="@drawable/ic_money"/>
+    <item
+        android:id="@+id/editTransaksi"
+        android:title="Edit"
+        android:icon="@drawable/ic_edit"/>
+
+
+</menu>
