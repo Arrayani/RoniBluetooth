@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
@@ -21,9 +23,12 @@
             app:cardCornerRadius="8dp">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:src="@drawable/ic_item"
+                android:layout_gravity="center"
+                android:background="@drawable/rounded_bg1"
+                android:layout_width="@dimen/_65sdp"
                 android:layout_height="@dimen/_55sdp"
-                android:src="@drawable/ic_underconstruction"
+
 
                 />
         </androidx.cardview.widget.CardView>
@@ -74,6 +79,8 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
         android:id="@+id/tv1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -143,6 +150,8 @@
 
     </LinearLayout>
     <LinearLayout
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
         android:id="@+id/row2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
