@@ -13,7 +13,8 @@
         android:orientation="horizontal"
         android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_10sdp"
-        app:layout_constraintTop_toTopOf="parent">
+
+        app:layout_constraintTop_toBottomOf="@+id/upperBar">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -21,11 +22,11 @@
             android:layout_margin="6dp"
             android:layout_weight="1"
             app:cardCornerRadius="8dp">
-
+<!--            android:background="@drawable/rounded_bg1"-->
             <ImageView
                 android:src="@drawable/ic_item"
                 android:layout_gravity="center"
-                android:background="@drawable/rounded_bg1"
+
                 android:layout_width="@dimen/_65sdp"
                 android:layout_height="@dimen/_55sdp"
 
@@ -217,6 +218,77 @@
                 />
         </androidx.cardview.widget.CardView>
     </LinearLayout>
+    <LinearLayout
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:id="@+id/tv2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/row2"
+        tools:layout_editor_absoluteX="1dp">
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            app:cardCornerRadius="8dp">
+            <TextView
+                android:layout_gravity="center"
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="Edit Item" />
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            app:cardCornerRadius="8dp">
+            <TextView
+                android:layout_gravity="center"
+                android:id="@+id/textView19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:text="Bluetooth \n Settings" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            app:cardCornerRadius="8dp">
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Print Ulang"
+                android:textAlignment="center" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            app:cardCornerRadius="8dp">
+            <TextView
+                android:layout_gravity="center"
+                android:id="@+id/textView21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="List Harga" />
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -228,5 +300,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/menu_navigation"
         tools:layout_editor_absoluteX="0dp" />
+
+
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/upperBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/top_app_std2_bar"
+        app:layout_constraintBaseline_toTopOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
