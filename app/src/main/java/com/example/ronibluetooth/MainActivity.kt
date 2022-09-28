@@ -39,6 +39,12 @@ import java.io.IOException
 import java.io.OutputStream
 import java.util.*
 import kotlin.collections.ArrayList
+import android.R
+
+import android.widget.EditText
+
+
+
 
 
 class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
@@ -71,6 +77,24 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
             println("button push")
         }
     }
+
+
+//        addCourseText = findViewById<View>(R.id.clEtAddCourse) as EditText
+//        addCourseText.setOnKeyListener(object : OnKeyListener() {
+//            fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
+//                if (event.action == KeyEvent.ACTION_DOWN) {
+//                    when (keyCode) {
+//                        KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+//                            addCourseFromTextBox()
+//                            return true
+//                        }
+//                        else -> {}
+//                    }
+//                }
+//                return false
+//            }
+//        })
+//    }
 
     private fun pressEnter() {
         val input1 = binding.input1
