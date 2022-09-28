@@ -8,15 +8,18 @@
         <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/drawable/less_rounded_border.xml" value="0.2125" />
         <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/drawable/rounded_bg1.xml" value="0.2125" />
         <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/drawable/rounded_blue_border.xml" value="0.1" />
-        <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/layout/activity_second.xml" value="0.6" />
-        <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/layout/device_card.xml" value="0.25" />
+        <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/layout/activity_second.xml" value="0.2" />
+        <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/layout/device_card.xml" value="0.14" />
         <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/layout/device_found.xml" value="0.25" />
         <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/layout/device_list.xml" value="0.25" />
         <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/layout/rounded_blue_border.xml" value="0.134375" />
         <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/layout/sandbox.xml" value="0.33" />
+        <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/menu/bottom_bar1.xml" value="0.1" />
+        <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/menu/editdeleteshow.xml" value="0.1" />
         <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/menu/menu.xml" value="0.1" />
         <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/menu/menu_navigation.xml" value="0.19635416666666666" />
+        <entry key="..\:/Legacy/RoniBluetooth/app/src/main/res/menu/top_app_std1_bar.xml" value="0.1" />
       </map>
     </option>
   </component>

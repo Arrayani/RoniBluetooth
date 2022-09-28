@@ -2,17 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/save"
-        android:icon="@drawable/ic_baseline_save"
+
         android:title="simpan" />
+<!--    android:icon="@drawable/ic_baseline_save"-->
     <item
         android:id="@+id/cleartext"
-        android:icon="@drawable/ic_baseline_clean"
+
         android:title="Reset" />
+<!--    android:icon="@drawable/ic_baseline_clean"-->
     <item
         android:id="@+id/close"
         android:title="Close"
-        android:icon="@drawable/ic_close"/>
-
+        />
+<!--    android:icon="@drawable/ic_close"-->
 
 
 </menu>

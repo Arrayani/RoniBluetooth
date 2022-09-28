@@ -19,6 +19,7 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.DialogInterface
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
         setContentView(binding.root)
         initView()
 
+
         val secondActBtn = binding.secondActBtn
         secondActBtn.setOnClickListener{
             intent = Intent(this,SecondActivity::class.java)
@@ -70,11 +72,58 @@ class MainActivity : AppCompatActivity(), DeviceAdapter.ClickListener {
         }
     }
 
+    private fun pressEnter() {
+        val input1 = binding.input1
+        val layoutInput = binding.layoutInput
+
+        input1.setOnKeyListener { view, i, keyEvent ->
+            if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN){
+                //Start your action
+                Toast.makeText(this, "Hi there ! \n This is a Enter Event Button", Toast.LENGTH_LONG).show()
+                //End action
+                return@setOnKeyListener true
+            }
+            false
+        }
+//        input1.setOnKeyListener { v, keyCode, event ->
+//
+//            when {
+//
+//                //Check if it is the Enter-Key,      Check if the Enter Key was pressed down
+//                ((keyCode == KeyEvent.KEYCODE_ENTER) && (event.action == KeyEvent.ACTION_DOWN)) -> {
+//
+//
+//                    //perform an action here e.g. a send message button click
+//                    //sendButton.performClick()
+//                    Toast.makeText(this, "Hi there ! \n This is a Enter Event Button", Toast.LENGTH_LONG).show()
+//                    println("you press enter")
+//                    //return true
+//                    return@setOnKeyListener true
+//                }
+//                else -> false
+//            }
+//
+//
+//        }
+
+//        input1.setOnKeyListener(View.OnKeyListener{v, keyCode, event ->
+//            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN){
+//                //Start your action
+//                Toast.makeText(this, "Hi there ! \n This is a Enter Event Button", Toast.LENGTH_LONG).show()
+//                //End action
+//                return@OnKeyListener true
+//            }
+//            false
+//        })
+
+
+    }
+
     private fun initView() {
         checkBTPermissions()
         cekForBTConPermision()
         cekScanBTPermission()
-
+        pressEnter()
 
         val findbtn = binding.findBtn
         findbtn.setOnClickListener {
